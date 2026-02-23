@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="osmap" version="3.7" method="upgrade">
+    <name>Ortholib</name>
+    <creationDate>February 22, 2026</creationDate>
+    <copyright>Copyright (C) 2026 Artem Moroz</copyright>
+    <license>GNU General Public License version 2 or later</license>
+    <author>Artem Moroz</author>
+    <authorEmail>artem.moroz@gmail.com</authorEmail>
+    <authorUrl>https://artemmoroz.org</authorUrl>
+    <version>1.0.0</version>
+    <description>OSMap Plugin for ortholib</description>
+       
+    <files>
+        <filename plugin="ortholib">ortholib.php</filename>
+    </files>
+</extension>
