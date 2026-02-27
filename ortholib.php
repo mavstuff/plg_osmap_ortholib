@@ -42,6 +42,7 @@ class PlgOsmapOrtholib extends Base
                     if (file_exists($content_opf_file_full))
                     {
                         $oebpsdir = dirname($content_opf_file_full);
+                        $content_opf_file_datetime = filemtime($content_opf_file_full);
                         $contentopfxml = simplexml_load_file($content_opf_file_full);
                         
                         $metadataxml = $contentopfxml->metadata->children("dc", TRUE);
@@ -66,7 +67,8 @@ class PlgOsmapOrtholib extends Base
                                 'uid'        => $menuparent->uid . '_' . $bookid,
                                 'link'       => 'index.php?option=com_ortholib&view=article&bookid='.$bookid,
                                 'priority'   => 0.5,
-                                'changefreq' => 'weekly' 
+                                'changefreq' => 'weekly',
+                                'modified'   => date(DATE_ATOM, $content_opf_file_datetime)
                             );
                             $collector->printNode($node);
                             // END Add book
@@ -80,10 +82,12 @@ class PlgOsmapOrtholib extends Base
                                         $toc_ncx_file = $oebpsdir.DIRECTORY_SEPARATOR.$item['href'];
                                         if (file_exists($toc_ncx_file))
                                         {
+                                            $toc_ncx_file_date = filemtime($toc_ncx_file);
+                                                                                       
                                             $toc_ncx_xml = simplexml_load_file($toc_ncx_file);
                                             
                                             //parse book TOC
-                                            $this->parseNavPoint($toc_ncx_xml->navMap->navPoint, $bookid, $collector, $menuparent);
+                                            $this->parseNavPoint($toc_ncx_xml->navMap->navPoint, $toc_ncx_file_date, $bookid, $collector, $menuparent);
 
                                             unset($toc_ncx_xml);
                                         }
@@ -104,7 +108,7 @@ class PlgOsmapOrtholib extends Base
     }
     
     // Recursively print the book TOC
-    private function parseNavPoint(SimpleXMLElement $navPoints, string $bookid, Collector $collector, Item $menuparent) 
+    private function parseNavPoint(SimpleXMLElement $navPoints, int $filedate, string $bookid, Collector $collector, Item $menuparent) 
     {
         foreach ($navPoints as $navPoint)
         {
@@ -119,7 +123,8 @@ class PlgOsmapOrtholib extends Base
                     'uid'        => $menuparent->uid . '_' . $bookid . '_' . $navpoint_id,
                     'link'       => 'index.php?option=com_ortholib&view=article&bookid='.$bookid."&navpoint=".$navpoint_id,
                     'priority'   => 0.5,
-                    'changefreq' => 'weekly' 
+                    'changefreq' => 'weekly',
+                    'modified'   => date(DATE_ATOM, $filedate)
                 );
                 $collector->printNode($node);
                 $collector->changeLevel(-1);
@@ -128,7 +133,7 @@ class PlgOsmapOrtholib extends Base
             
             if (!empty($navPoint->navPoint))
             {
-                $this->parseNavPoint($navPoint->navPoint, $bookid, $collector, $menuparent);
+                $this->parseNavPoint($navPoint->navPoint, $filedate, $bookid, $collector, $menuparent);
             }
         }
     }
