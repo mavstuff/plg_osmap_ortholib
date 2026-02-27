@@ -64,7 +64,9 @@ class PlgOsmapOrtholib extends Base
                                 'id'         => $menuparent->id,
                                 'name'       => $bookname,
                                 'uid'        => $menuparent->uid . '_' . $bookid,
-                                'link'       => 'index.php?option=com_ortholib&view=article&bookid='.$bookid 
+                                'link'       => 'index.php?option=com_ortholib&view=article&bookid='.$bookid,
+                                'priority'   => 0.5,
+                                'changefreq' => 'weekly' 
                             );
                             $collector->printNode($node);
                             // END Add book
@@ -115,7 +117,9 @@ class PlgOsmapOrtholib extends Base
                     'id'         => $menuparent->id,
                     'name'       => $navPoint->navLabel->text,
                     'uid'        => $menuparent->uid . '_' . $bookid . '_' . $navpoint_id,
-                    'link'       => 'index.php?option=com_ortholib&view=article&bookid='.$bookid."&navpoint=".$navpoint_id
+                    'link'       => 'index.php?option=com_ortholib&view=article&bookid='.$bookid."&navpoint=".$navpoint_id,
+                    'priority'   => 0.5,
+                    'changefreq' => 'weekly' 
                 );
                 $collector->printNode($node);
                 $collector->changeLevel(-1);
